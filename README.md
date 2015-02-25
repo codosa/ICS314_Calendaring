@@ -13,4 +13,4 @@ Collon Saphore <csaphore@hawaii.edu>
 
 Jason Tanabe <jasonmt@hawaii.edu>
 
-D. Hal <dhal@hawaii.edu>
+Dhal Lorenzo <dhal@hawaii.edu>
