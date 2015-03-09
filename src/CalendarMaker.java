@@ -39,8 +39,16 @@ public class CalendarMaker {
 		System.out.println("Enter a Summary");
 		inputString = scanner.nextLine();
 		writer.println("SUMMARY:" + inputString);
-		writer.println("DTSTART;TZID=Pacific/Honolulu:20150508T180000");
-		writer.println("DDTEND;TZID=Pacific/Honolulu:20150508T200000");
+		System.out.println("Enter Start Date(YYYYMMDD):");
+		inputString = scanner.nextLine();
+		System.out.println("Enter Start Time(HHMMSS):");
+		inputString += "T" + scanner.nextLine();
+		writer.println("DTSTART;TZID=Pacific/Honolulu:" + inputString);
+		System.out.println("Enter End Date(YYYYMMDD):");
+		inputString = scanner.nextLine();
+		System.out.println("Enter End Time(HHMMSS):");
+		inputString += "T" + scanner.nextLine();
+		writer.println("DDTEND;TZID=Pacific/Honolulu:" + inputString);
 		writer.println("END:VEVENT");
 		writer.println("END:VCALENDAR");
 		System.out.println("Finished Creating File");
