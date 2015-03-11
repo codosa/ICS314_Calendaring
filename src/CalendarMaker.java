@@ -48,7 +48,7 @@ public class CalendarMaker {
 		inputString = scanner.nextLine();
 		System.out.println("Enter End Time(HHMMSS):");
 		inputString += "T" + scanner.nextLine();
-		writer.println("DDTEND;TZID=Pacific/Honolulu:" + inputString);
+		writer.println("DTEND;TZID=Pacific/Honolulu:" + inputString);
 		writer.println("END:VEVENT");
 		writer.println("END:VCALENDAR");
 		System.out.println("Finished Creating File");
