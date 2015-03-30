@@ -4,6 +4,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Scanner;
 
 public class CalendarMaker {
@@ -28,7 +30,7 @@ public class CalendarMaker {
 	private String					location;
 	private String					summary;
 
-	private class DateData implements Comparable {
+	private class DateData implements Comparable<DateData> {
 		public Calendar cal;
 
 		public DateData() {
@@ -96,17 +98,19 @@ public class CalendarMaker {
 			return true;
 		}
 
+
 		@Override
-		public int compareTo(Object arg0) {
-			DateData other = (DateData) arg0;
-			if (cal.getTime().before(other.cal.getTime())) {
+		public int compareTo(DateData o) {
+			if (cal.getTime().before(o.cal.getTime())) {
+				return -1;
+			} else if (cal.getTime().after(o.cal.getTime())) {
 				return 1;
 			} else {
 				return 0;
 			}
 		}
 	}
-	private class DateBlockData implements Comparable {
+	private class DateBlockData implements Comparable<DateBlockData> {
 		public DateData			startTime;
 		public DateData			endTime;
 		
@@ -121,9 +125,8 @@ public class CalendarMaker {
 		}
 
 		@Override
-		public int compareTo(Object arg0) {
-			DateBlockData other = (DateBlockData) arg0;
-			return startTime.compareTo(other.startTime);
+		public int compareTo(DateBlockData o) {
+			return startTime.compareTo(o.startTime);
 		}
 	}
 	
@@ -207,24 +210,36 @@ public class CalendarMaker {
 				File file = new File(filename);
 				Scanner fileScanner = null;
 				try {
-				fileScanner = new Scanner(file);
+					fileScanner = new Scanner(file);
 				} catch (Exception e) {}
 				String start = null;
 				String end = null;
+				// parse .ics for DTSTART and DTEND and init objects
 				while (fileScanner.hasNext()) {
 					String[] splitLine = fileScanner.nextLine().split(":");
 					if (stringMatch(splitLine[0], "DTSTART")) start = splitLine[1];
 					if (stringMatch(splitLine[0], "DTEND")) end = splitLine[1];
 				}
+				// if the .ics file has proper DTSTART and DTEND
 				if (start != null && end != null) {
 					DateBlockData block = new DateBlockData(start, end);
 					block.startTime.show();
 					block.endTime.show();
-					dateBlocks.add(block);
+					// all date blocks must be on the same day, only add if they are
+					if (dateBlocks.isEmpty() || (!dateBlocks.isEmpty() && 
+							dateBlocks.get(0).startTime.isSameDate(block.startTime))) {
+						dateBlocks.add(block);
+					}
 				}
+
 			}
 		}
-		System.out.println(Integer.toString(dateBlocks.get(1).compareTo(dateBlocks.get(0))));
+		Collections.sort(dateBlocks);
+		System.out.println("Sorted");
+		for (DateBlockData block : dateBlocks) {
+			block.startTime.show();
+			block.endTime.show();
+		}
 	}
 	
 	public boolean grabPublic() {
