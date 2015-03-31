@@ -14,27 +14,31 @@ public class CalendarMaker {
 	private static final DateFormat DATE_FORMAT = new SimpleDateFormat("MM/dd/yyyy");
 	private static final DateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm:ss");
 
-	private final static int 		PUBLIC_PRIVATE = 1;
-	private final static int 		PRIORITY = 2;
-	private final static int 		LOCATION = 3;
-	private final static int 		SUMMARY = 4;
-	private final static int 		START_TIME = 5;
-	private final static int 		END_TIME = 6;
-	private final static int		CREATE_FREE_TIME = 7;
-	private final static int 		SHOW_DATA = 8;
-	private final static int 		MAKE_CALENDAR = 9;
-	private final static int 		QUIT = 10;
+	private final static int 		    PUBLIC_PRIVATE = 1;
+	private final static int 		    PRIORITY = 2;
+	private final static int 		    LOCATION = 3;
+	private final static int 		    SUMMARY = 4;
+	private final static int 		    START_TIME = 5;
+	private final static int 		    END_TIME = 6;
+	private final static int		    CREATE_FREE_TIME = 7;
+	private final static int 		    SHOW_DATA = 8;
+	private final static int 		    MAKE_CALENDAR = 9;
+	private final static int 		    QUIT = 10;
 	
-	private boolean 				isPublic;
-	private int 					priority;
-	private String					location;
-	private String					summary;
+	private boolean 				        isPublic;
+	private int 					          priority;
+	private String					        location;
+	private String					        summary;
 
 	private class DateData implements Comparable<DateData> {
 		public Calendar cal;
 
 		public DateData() {
 			cal = Calendar.getInstance();
+		}
+		
+		public DateData(DateData other) {
+		  cal = (Calendar) other.cal.clone();
 		}
 		
 		public DateData(String data) {
@@ -49,6 +53,14 @@ public class CalendarMaker {
 			cal.set(year, month-1, day, hour, minute, second);
 		}
 		
+		public int timeDifference(DateData other) {
+		  int leftSecs = cal.get(Calendar.SECOND) + cal.get(Calendar.MINUTE)*60 +
+		      cal.get(Calendar.HOUR)*3600;
+		  int rightSecs = other.cal.get(Calendar.SECOND) + other.cal.get(Calendar.MINUTE)*60 +
+		      other.cal.get(Calendar.HOUR)*3600;
+		  return rightSecs - leftSecs;
+		}
+
 		public boolean isSameDate(DateData other) {
 			return cal.get(Calendar.MONTH) == other.cal.get(Calendar.MONTH) && 
 					other.cal.get(Calendar.YEAR) == cal.get(Calendar.YEAR) && 
@@ -123,6 +135,14 @@ public class CalendarMaker {
 			startTime = new DateData(start);
 			endTime = new DateData(end);
 		}
+		
+		public DateBlockData difference(DateBlockData other) {
+		  DateBlockData diff = new DateBlockData();
+		  diff.startTime = new DateData(endTime);
+		  diff.endTime = new DateData(other.startTime);
+		  if (diff.startTime.timeDifference(diff.endTime) <= 0) return null;
+		  return diff;
+		}
 
 		@Override
 		public int compareTo(DateBlockData o) {
@@ -131,7 +151,7 @@ public class CalendarMaker {
 	}
 	
 	private DateBlockData 			dateBlock;	
-	private Scanner					scanner;
+	private Scanner					    scanner;
 	
 	public static void main(String[] args) {
 		CalendarMaker maker = new CalendarMaker();
@@ -234,6 +254,10 @@ public class CalendarMaker {
 
 			}
 		}
+		if (dateBlocks.size() == 0) {
+		  return;
+		}
+
 		Collections.sort(dateBlocks);
 		System.out.println("Sorted");
 		for (DateBlockData block : dateBlocks) {
