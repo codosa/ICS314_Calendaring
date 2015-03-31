@@ -8,6 +8,16 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Scanner;
 
+
+// TODO
+// Test driven development
+// separate into multiple classes
+// make some functions static
+// clean up code for createFreeTime
+// better naming for createFreeTime
+// more tests for createFreeTime 
+// change makeCalendar to take in a DateBlockData
+
 public class CalendarMaker {
 	private static final DateFormat ICS_FORMAT_DATE = new SimpleDateFormat("yyyyMMdd");
 	private static final DateFormat ICS_FORMAT_TIME = new SimpleDateFormat("HHmmss");
@@ -35,6 +45,11 @@ public class CalendarMaker {
 
 		public DateData() {
 			cal = Calendar.getInstance();
+		}
+		
+		public DateData(int year, int month, int day, int hour, int minute, int second) {
+		  cal = Calendar.getInstance();
+		  cal.set(year, month-1, day, hour, minute, second);
 		}
 		
 		public DateData(DateData other) {
@@ -129,6 +144,11 @@ public class CalendarMaker {
 		public DateBlockData() {
 			startTime = new DateData();
 			endTime = new DateData();
+		}
+		
+		public DateBlockData(DateData start, DateData end) {
+		  startTime = start;
+		  endTime = end;
 		}
 		
 		public DateBlockData(String start, String end) {
@@ -251,18 +271,26 @@ public class CalendarMaker {
 						dateBlocks.add(block);
 					}
 				}
-
 			}
 		}
 		if (dateBlocks.size() == 0) {
 		  return;
 		}
-
+		int year = dateBlocks.get(0).startTime.cal.get(Calendar.YEAR);
+		// add one because cal.get(Calendar.MONTH) starts at 0 for jan
+		int month = dateBlocks.get(0).startTime.cal.get(Calendar.MONTH) + 1;
+		int day = dateBlocks.get(0).startTime.cal.get(Calendar.DAY_OF_MONTH);
+		dateBlocks.add(new DateBlockData(new DateData(year, month, day, 0, 0, 0), 
+		    new DateData(year, month, day, 0, 0, 0)));
+		dateBlocks.add(new DateBlockData(new DateData(year, month, day, 23, 59, 59), 
+		    new DateData(year, month, day, 23, 59, 59)));
 		Collections.sort(dateBlocks);
-		System.out.println("Sorted");
-		for (DateBlockData block : dateBlocks) {
-			block.startTime.show();
-			block.endTime.show();
+		for (int i = 1; i < dateBlocks.size(); i++) {
+		  DateBlockData temp = dateBlocks.get(i-1).difference(dateBlocks.get(i));
+		  if (temp != null) {
+		    dateBlock = temp;
+		    makeCalendar(Integer.toString(i));
+		  }
 		}
 	}
 	
