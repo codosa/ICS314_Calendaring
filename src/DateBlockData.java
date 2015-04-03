@@ -1,7 +1,6 @@
-
 public class DateBlockData implements Comparable<DateBlockData> {
-  private DateData mStartTime;
-  private DateData mEndTime;
+  private DateData                mStartTime;
+  private DateData                mEndTime;
 
   public DateBlockData() {
     mStartTime = new DateData();
@@ -18,27 +17,26 @@ public class DateBlockData implements Comparable<DateBlockData> {
     mEndTime = new DateData(end);
   }
 
-  public DateBlockData difference(DateBlockData other) {
+  public static DateBlockData difference(DateBlockData left, DateBlockData right) {
     DateBlockData diff = new DateBlockData();
-    diff.mStartTime = new DateData(mEndTime);
-    diff.mEndTime = new DateData(other.mStartTime);
-    if (diff.mStartTime.timeDifference(diff.mEndTime) <= 0)
-      return null;
+    diff.setStartTime(new DateData(left.getEndTime()));
+    diff.setEndTime(new DateData(right.getStartTime()));
+    if (DateData.timeDifference(diff.getStartTime(), diff.getEndTime()) <= 0) return null;
     return diff;
   }
-  
+
   public DateData getStartTime() {
     return mStartTime;
   }
-  
+
   public DateData getEndTime() {
     return mEndTime;
   }
-  
+
   public void setStartTime(DateData start) {
     mStartTime = start;
   }
-  
+
   public void setEndTime(DateData end) {
     mEndTime = end;
   }

@@ -4,12 +4,15 @@ import java.util.Calendar;
 import java.util.Scanner;
 
 public class DateData implements Comparable<DateData> {
-	private static final DateFormat ICS_FORMAT_DATE = new SimpleDateFormat("yyyyMMdd");
-	private static final DateFormat ICS_FORMAT_TIME = new SimpleDateFormat("HHmmss");
-	private static final DateFormat DATE_FORMAT = new SimpleDateFormat("MM/dd/yyyy");
-	private static final DateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm:ss");
+  private static final DateFormat           ICS_FORMAT_DATE = new SimpleDateFormat(
+      "yyyyMMdd");
+  private static final DateFormat           ICS_FORMAT_TIME = new SimpleDateFormat(
+      "HHmmss");
+  private static final DateFormat           DATE_FORMAT = new SimpleDateFormat(
+      "MM/dd/yyyy");
+  private static final DateFormat           TIME_FORMAT = new SimpleDateFormat("HH:mm:ss");
 
-  private Calendar mCal;
+  private Calendar                          mCal;
 
   public DateData() {
     mCal = Calendar.getInstance();
@@ -35,20 +38,20 @@ public class DateData implements Comparable<DateData> {
     mCal = Calendar.getInstance();
     mCal.set(year, month - 1, day, hour, minute, second);
   }
-  
+
   public Calendar getCal() {
     return mCal;
   }
-  
+
   public void setCal(Calendar cal) {
     mCal = cal;
   }
 
-  public int timeDifference(DateData other) {
-    int leftSecs = mCal.get(Calendar.SECOND) + mCal.get(Calendar.MINUTE) * 60
-        + mCal.get(Calendar.HOUR) * 3600;
-    int rightSecs = other.mCal.get(Calendar.SECOND)
-        + other.mCal.get(Calendar.MINUTE) * 60 + other.mCal.get(Calendar.HOUR)
+  public static int timeDifference(DateData left, DateData right) {
+    int leftSecs = left.getCal().get(Calendar.SECOND) + left.getCal().get(Calendar.MINUTE) * 60
+        + left.getCal().get(Calendar.HOUR) * 3600;
+    int rightSecs = right.getCal().get(Calendar.SECOND)
+        + right.getCal().get(Calendar.MINUTE) * 60 + right.getCal().get(Calendar.HOUR)
         * 3600;
     return rightSecs - leftSecs;
   }
