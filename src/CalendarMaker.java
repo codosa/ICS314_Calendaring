@@ -129,9 +129,8 @@ public class CalendarMaker {
           block.getStartTime().show();
           block.getEndTime().show();
           // all date blocks must be on the same day, only add if they are
-          if (mDateBlocks.isEmpty()
-              || (!mDateBlocks.isEmpty() && mDateBlocks.get(0).getStartTime()
-                  .isSameDate(block.getStartTime()))) {
+          if (mDateBlocks.isEmpty() || (!mDateBlocks.isEmpty() && 
+              DateData.isSameDate(mDateBlocks.get(0).getStartTime(), block.getStartTime()))) {
             mDateBlocks.add(block);
           }
         }

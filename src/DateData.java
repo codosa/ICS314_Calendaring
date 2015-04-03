@@ -28,14 +28,19 @@ public class DateData implements Comparable<DateData> {
   }
 
   public DateData(String data) {
-    int year = Integer.parseInt(data.substring(0, 4));
-    int month = Integer.parseInt(data.substring(4, 6));
-    int day = Integer.parseInt(data.substring(6, 8));
-    int hour = Integer.parseInt(data.substring(9, 11));
-    int minute = Integer.parseInt(data.substring(11, 13));
-    int second = Integer.parseInt(data.substring(13, 15));
-    // possibly could check if data is valid over here
     mCal = Calendar.getInstance();
+    int year = 0, month = 0, day = 0, hour = 0, minute = 0, second = 0;
+    try {
+      year = Integer.parseInt(data.substring(0, 4));
+      month = Integer.parseInt(data.substring(4, 6));
+      day = Integer.parseInt(data.substring(6, 8));
+      hour = Integer.parseInt(data.substring(9, 11));
+      minute = Integer.parseInt(data.substring(11, 13));
+      second = Integer.parseInt(data.substring(13, 15));
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    // possibly could check if data is valid over here
     mCal.set(year, month - 1, day, hour, minute, second);
   }
 
@@ -49,17 +54,16 @@ public class DateData implements Comparable<DateData> {
 
   public static int timeDifference(DateData left, DateData right) {
     int leftSecs = left.getCal().get(Calendar.SECOND) + left.getCal().get(Calendar.MINUTE) * 60
-        + left.getCal().get(Calendar.HOUR) * 3600;
-    int rightSecs = right.getCal().get(Calendar.SECOND)
-        + right.getCal().get(Calendar.MINUTE) * 60 + right.getCal().get(Calendar.HOUR)
-        * 3600;
+        + left.getCal().get(Calendar.HOUR_OF_DAY) * 3600;
+    int rightSecs = right.getCal().get(Calendar.SECOND) + right.getCal().get(Calendar.MINUTE) * 60 
+        + right.getCal().get(Calendar.HOUR_OF_DAY) * 3600;
     return rightSecs - leftSecs;
   }
 
-  public boolean isSameDate(DateData other) {
-    return mCal.get(Calendar.MONTH) == other.mCal.get(Calendar.MONTH)
-        && other.mCal.get(Calendar.YEAR) == mCal.get(Calendar.YEAR)
-        && other.mCal.get(Calendar.DAY_OF_MONTH) == mCal
+  public static boolean isSameDate(DateData left, DateData right) {
+    return left.getCal().get(Calendar.MONTH) == right.getCal().get(Calendar.MONTH)
+        && right.getCal().get(Calendar.YEAR) == left.getCal().get(Calendar.YEAR)
+        && right.getCal().get(Calendar.DAY_OF_MONTH) == left.getCal()
             .get(Calendar.DAY_OF_MONTH);
   }
 
@@ -94,7 +98,7 @@ public class DateData implements Comparable<DateData> {
       return false;
     mCal.set(Calendar.YEAR, inputInt);
 
-    System.out.println("Enter Hour (24-hr format):");
+    System.out.println("Enter Hour (0-23):");
     inputInt = Integer.parseInt(scanner.nextLine());
     if (inputInt < 0 || inputInt > 23)
       return false;
