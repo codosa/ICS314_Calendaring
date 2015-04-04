@@ -267,7 +267,7 @@ public class CalendarMaker {
         + mDateBlock.getEndTime().format());
     writer.println("END:VEVENT");
     writer.println("END:VCALENDAR");
-    System.out.println("Finished Creating File");
+    System.out.println("Finished Creating File: " + filename);
     writer.close();
   }
 

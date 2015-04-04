@@ -15,6 +15,11 @@ public class DateDataTest {
     assertTrue(testDate.compareTo(mDate1) == 0);
   }
   
+  @Test
+  public void testDateDataDateData() {
+    DateData testDate = new DateData(mDate1);
+    assertNotSame(testDate, mDate1);
+  }
   
   @Test
   public void testTimeDifference() {
